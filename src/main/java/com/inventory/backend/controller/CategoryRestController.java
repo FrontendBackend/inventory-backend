@@ -1,6 +1,14 @@
 package com.inventory.backend.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.inventory.backend.model.Category;
 import com.inventory.backend.response.CategoryResponseRest;
@@ -83,4 +93,32 @@ public class CategoryRestController {
 		ResponseEntity<CategoryResponseRest> response = service.deleteById(id);
 		return response;
 	}
+
+
+	@PostMapping(value = "/import-excel")
+    public ResponseEntity<List<Category>> importExcelFile(@RequestParam("file") MultipartFile files) throws IOException {
+        HttpStatus status = HttpStatus.OK;
+        List<Category> categoryList = new ArrayList<>();
+
+        XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+        XSSFSheet worksheet = workbook.getSheetAt(0);
+
+        for (int index = 0; index < worksheet.getPhysicalNumberOfRows(); index++) {
+            if (index > 0) {
+                Category category = new Category();
+
+                XSSFRow row = worksheet.getRow(index);
+                // Integer id = (int) row.getCell(0).getNumericCellValue();
+				// Long idAux = (Long) id.longValue();
+                // category.setId(id.longValue());
+                category.setName(row.getCell(0).getStringCellValue());
+                category.setDescription(row.getCell(1).getStringCellValue());
+
+				service.save(category);
+                categoryList.add(category);
+            }
+        }
+
+        return new ResponseEntity<>(categoryList, status);
+    }
 }
