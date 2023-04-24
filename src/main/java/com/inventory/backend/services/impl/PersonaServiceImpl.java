@@ -229,10 +229,10 @@ public class PersonaServiceImpl implements PersonaService {
         tblHistorialPrestamo.setTblPrestamo(new TblPrestamo());
         tblHistorialPrestamo.getTblPrestamo().setIdPrestamo(tblHistorialPrestamoDTO.getIdPrestamo());
         tblHistorialPrestamo.setFePrestamoHistorial(new Date());
-        tblHistorialPrestamo.setDescripcionHistorial("tests"); //tblHistorialPrestamoDTO.getDescripcionHistorial()
+        tblHistorialPrestamo.setDescripcionHistorial(tblHistorialPrestamoDTO.getDescripcionHistorial()); //tblHistorialPrestamoDTO.getDescripcionHistorial()
         tblHistorialPrestamo.setMontoSubtotalOperado(tblHistorialPrestamoDTO.getMontoSubtotalOperado());
         tblHistorialPrestamo.setMontoOperar(tblHistorialPrestamoDTO.getMontoOperar());
-        tblHistorialPrestamo.setFlagOperador("0"); // tblHistorialPrestamoDTO.getFlagOperador() // suma = '1' | resta = '0'
+        tblHistorialPrestamo.setFlagOperador(tblHistorialPrestamoDTO.getFlagOperador()); // tblHistorialPrestamoDTO.getFlagOperador() // suma = '1' | resta = '0'
 
         tblHistorialPrestamo.setEsRegistro(ConstantesUtil.IND_ACTIVO);
 
