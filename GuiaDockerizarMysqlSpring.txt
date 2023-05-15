@@ -1,0 +1,24 @@
+Creación de 2 contenedores Docker con conexión entre ellos:
+1 - contenedor Api Rest (Spring Boot) 
+2 - contenedor MySql.
+
+**** MySQL Container ****
+ docker pull mysql
+ docker run -d -p 13306:3306 --name mysql_container -e MYSQL_ROOT_PASSWORD=secret mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+ docker exec -it mysql_container mysql -u root -p
+ docker network connect my-net mysql
+
+ **** MySQL ****
+ create user 'mysqluser' identified by 'secret';
+ GRANT ALL PRIVILEGES ON *.* TO 'mysqluser'@'%';
+ CREATE DATABASE users_db;
+ USE users_db;
+
+**** Docker cambiar de red ****
+docker network create --driver bridge my-net
+docker network disconnect bridge container_name
+docker network connect my-net container_name
+
+**** Build DockerFile Api REST ****
+docker build -t user/users_service:V1 .
+docker run --network my-net -d -p 18082:8082 --name name_container ImageID
