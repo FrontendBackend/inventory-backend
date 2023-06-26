@@ -1,5 +1,6 @@
 package com.inventory.backend.services.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ import com.inventory.backend.services.PersonaService;
 import com.inventory.backend.utils.CommonsUtil;
 import com.inventory.backend.utils.ConstantesUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class PersonaServiceImpl implements PersonaService {
@@ -167,13 +171,32 @@ public class PersonaServiceImpl implements PersonaService {
         tblPrestamo.setFeCancelado(tblPrestamoDTO.getFeCancelado());
         tblPrestamo.setDescripcion(tblPrestamoDTO.getDescripcion());
         tblPrestamo.setMonto(tblPrestamoDTO.getMonto());
-        tblPrestamo.setEstado(tblPrestamoDTO.getEstado()); // TODO: CAMBIAR CUANDO EL PRESTAMO YA HA SIDO CANCELADO
+        tblPrestamo.setEstado(tblPrestamoDTO.getEstado()); 
 
         TblPrestamo tblPrestamoModificado = this.prestamoRepository.save(tblPrestamo);
 
         TblPrestamoDTO tblPrestamoDTOResultado = this.prestamoRepository
                 .obtenerPrestamoPorId(tblPrestamoModificado.getIdPrestamo());
 
+        BigDecimal deudaTotal = this.prestamoRepository.calcularDeudaTotal(tblPrestamoDTO.getIdPersona());
+
+        if(deudaTotal == null){
+            // Procedemos a actualizar el estado de la deuda a cancelado = 1
+            TblPersona tblPersona = this.obtenerPersonaById(tblPrestamoDTO.getIdPersona());
+
+            tblPersona.setFlEstadoDeuda("1");
+
+            this.personaRepository.save(tblPersona);
+
+        }else{
+            // Procedemos a actualizar el estado de la deuda a pendiente = 0
+            TblPersona tblPersona = this.obtenerPersonaById(tblPrestamoDTO.getIdPersona());
+
+            tblPersona.setFlEstadoDeuda("0");
+
+            this.personaRepository.save(tblPersona);
+        }
+        
         return tblPrestamoDTOResultado;
     }
 

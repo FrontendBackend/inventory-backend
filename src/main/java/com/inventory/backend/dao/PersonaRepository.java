@@ -12,7 +12,7 @@ import com.inventory.backend.model.TblPersona;
 public interface PersonaRepository extends JpaRepository<TblPersona, Long>{
     
     @Query("SELECT new com.inventory.backend.dtos.TblPersonaDTOResultado( "
-            + "p.idPersona, p.noPersona, p.apPaterno, p.apMaterno  "
+            + "p.idPersona, p.noPersona, p.apPaterno, p.apMaterno, p.flEstadoDeuda "
             + ") " 
             + "FROM TblPersona p "
             + "WHERE p.esRegistro = '1' "
@@ -20,7 +20,7 @@ public interface PersonaRepository extends JpaRepository<TblPersona, Long>{
     Page<TblPersonaDTO> paginarPersonas(Pageable paginador);
 
     @Query("SELECT new com.inventory.backend.dtos.TblPersonaDTOResultado( "
-            + "p.idPersona, p.noPersona, p.apPaterno, p.apMaterno  "
+            + "p.idPersona, p.noPersona, p.apPaterno, p.apMaterno, p.flEstadoDeuda "
             + ") " 
             + "FROM TblPersona p "
             + "WHERE p.idPersona = :idPersona "

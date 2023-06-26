@@ -1,5 +1,8 @@
 package com.inventory.backend.dao;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +28,13 @@ public interface PrestamoRepository extends JpaRepository<TblPrestamo, Long> {
             + "FROM TblPrestamo p "
             + "WHERE p.idPrestamo = :idPrestamo ")
     TblPrestamoDTO obtenerPrestamoPorId(@Param("idPrestamo") Long idPrestamo);
+
+    @Query("SELECT "
+            + "SUM(p.monto) "
+            + "FROM TblPrestamo p "
+            + "WHERE p.esRegistro = '1' " 
+            + "AND p.estado = '0' "
+            + "AND p.tblPersona.idPersona = :idPersona "
+            )
+    BigDecimal calcularDeudaTotal(@Param("idPersona") Long idPersona);
 }

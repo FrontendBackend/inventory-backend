@@ -16,4 +16,9 @@ public class TblPrestamoDTOResultado extends TblPrestamoDTO {
         this.setMonto(monto);
         this.setEstado(estado);
     }
+  
+    public TblPrestamoDTOResultado(BigDecimal monto) {
+        super();
+        this.setMonto(monto);
+    }
 }

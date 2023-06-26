@@ -38,6 +38,9 @@ public class TblPersona implements Serializable {
     @Column(name = "ES_REGISTRO", nullable = false)
 	private String esRegistro;
 
+    @Column(name = "FL_ESTADO_DEUDA", nullable = true)
+	private String flEstadoDeuda;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "FE_CREACION", nullable = false)
     private Date feCreacion;

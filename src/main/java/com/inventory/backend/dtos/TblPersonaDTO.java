@@ -16,4 +16,6 @@ public class TblPersonaDTO {
 	private String apMaterno;
 
 	private String esRegistro;
+
+	private String flEstadoDeuda;
 }
